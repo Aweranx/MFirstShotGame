@@ -1,0 +1,87 @@
+[gd_scene load_steps=7 format=3 uid="uid://dmn4d1klil81y"]
+
+[ext_resource type="Texture2D" uid="uid://sphbwo5r6txi" path="res://AssetBundle/Sprites/ForestBackground.png" id="1_6sr4u"]
+[ext_resource type="Script" path="res://Scripts/GameManager.gd" id="1_8chv3"]
+[ext_resource type="PackedScene" uid="uid://4e7rrapwhjhf" path="res://Scenes/player.tscn" id="2_crit2"]
+[ext_resource type="PackedScene" uid="uid://by3rd6anwl52p" path="res://Scenes/slime.tscn" id="3_5gxxg"]
+[ext_resource type="FontFile" uid="uid://whu6csm3mp4b" path="res://AssetBundle/Uranus_Pixel_11Px.ttf" id="5_v8l3r"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_kmx35"]
+distance = -128.0
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("spawn_timer", "label_text", "confirmation_dialog") groups=["slime"]]
+y_sort_enabled = true
+position = Vector2(21, -6)
+script = ExtResource("1_8chv3")
+slime_scene = ExtResource("3_5gxxg")
+spawn_timer = NodePath("Timer")
+label_text = NodePath("CanvasLayer/Label")
+confirmation_dialog = NodePath("ConfirmationDialog")
+
+[node name="BackGround1" type="Sprite2D" parent="."]
+position = Vector2(-117, 0)
+texture = ExtResource("1_6sr4u")
+metadata/_edit_lock_ = true
+
+[node name="BackGround2" type="Sprite2D" parent="."]
+position = Vector2(119, 0)
+texture = ExtResource("1_6sr4u")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2.5, 2.5)
+metadata/_edit_lock_ = true
+
+[node name="player" parent="." instance=ExtResource("2_crit2")]
+position = Vector2(-194, 70)
+
+[node name="Boundary" type="Node2D" parent="."]
+visible = false
+metadata/_edit_lock_ = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Boundary"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D"]
+shape = SubResource("WorldBoundaryShape2D_kmx35")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Boundary"]
+rotation = 1.57079
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D2"]
+position = Vector2(18.9998, 101)
+shape = SubResource("WorldBoundaryShape2D_kmx35")
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Boundary"]
+rotation = -1.57079
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D3"]
+position = Vector2(-3.99978, 100)
+shape = SubResource("WorldBoundaryShape2D_kmx35")
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Boundary"]
+rotation = -3.14159
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Boundary/StaticBody2D4"]
+position = Vector2(21.9993, -161)
+shape = SubResource("WorldBoundaryShape2D_kmx35")
+
+[node name="ConfirmationDialog" type="ConfirmationDialog" parent="."]
+title = "retry"
+cancel_button_text = "menu"
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+offset_left = 10.0
+offset_top = 3.0
+offset_right = 75.0
+offset_bottom = 26.0
+scale = Vector2(1.62366, 1.56142)
+theme_override_fonts/font = ExtResource("5_v8l3r")
+text = "Score : 0"
+
+[connection signal="timeout" from="Timer" to="." method="_spawn_slime"]
